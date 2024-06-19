@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "youtube-briefer-ai"
+version = "0.1.0"
+description = "Resume cualquier video de youtube"
+authors = ["Ch3my <joseconchan1@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyinstaller = "^6.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
