@@ -10,7 +10,7 @@ Construida con Tkinter (multiplataforma)
 
 ## Googla Colab ##
 
-Se incluye una version de Google Colab
+Se incluye una version de Google Colab `youtube_briefer_colab.py`
 
 ## Funcionamiento ##
 
