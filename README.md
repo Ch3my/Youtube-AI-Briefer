@@ -56,6 +56,12 @@ Este comando creara un ejecutable en la carpeta `dist/`
 pyinstaller -n "Youtube AI Briefer" --onefile --windowed --icon=assets/favicon.ico main.py
 ```
 
+o dependiendo de tu entorno (pyinstaller como modulo |case-sensitive| )
+
+```
+python -m PyInstaller -n "Youtube AI Briefer" --onefile --windowed --icon=assets/favicon.ico main.py
+```
+
 ## Notas ##
 
 ### 06-2024 - LLM OpenSource ###

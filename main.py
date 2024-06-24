@@ -13,23 +13,32 @@ from globals import (
 import threading
 from fetch_and_display_transcript import fetch_and_display_transcript
 
+
 # Define a callback function to update the UI after thread completes
 def update_ui(message):
     button.config(state=tk.NORMAL)
-    set_feedback_msg(message)
+    if message is not None:
+        set_feedback_msg(message)
 
 
 def on_button_click():
-    # Declaro que la variable es global en realidad
-    global is_button_enabled
     url = entry.get()
     if url == "":
         set_feedback_msg("Por favor ingresa un link")
+        button.config(state=tk.NORMAL)
         return
 
     set_feedback_msg("Estamos procesando el Video :D")
     button.config(state=tk.DISABLED)
     threading.Thread(target=fetch_and_display_transcript, args=(url, update_ui)).start()
+
+
+def on_resize(event):
+    info.config(wraplength=MAIN_WINDOW.winfo_width() - 50)
+    feedback_label.config(wraplength=MAIN_WINDOW.winfo_width() - 50)
+    # width = MAIN_WINDOW.winfo_width()
+    # height = MAIN_WINDOW.winfo_height()
+    # print(f"Current size: {width} x {height}")
 
 
 # Create the main window
@@ -46,15 +55,16 @@ feedback_label = tk.Label(
     font=("Consolas", 14),
     bg=BG_COLOR,
     fg=FG_COLOR,
+    wraplength=370,
+    justify="left",
 )
-feedback_label.pack(pady=(0, 10))  # Add padding below the message label
+feedback_label.pack(fill="x", pady=(0, 10))  # Add padding below the message label
 # globals verifica si tiene algo llamado feedback_label, para hacerle un update, por eso debemos pasarlo
 globals_instance.feedback_label = feedback_label
 
 # Separator object
 separator = tk.Frame(MAIN_WINDOW, bg="gray", height=1, bd=0)
-separator.pack(fill="x")
-separator.pack(pady=(0, 10))  # Add padding below the message label
+separator.pack(fill="x", pady=(0, 10))
 
 info = tk.Label(
     MAIN_WINDOW,
@@ -65,7 +75,7 @@ info = tk.Label(
     wraplength=370,
     justify="left",
 )
-info.pack(pady=(0, 10), anchor="w")
+info.pack(pady=(0, 10), anchor="w", fill="x")
 
 separator2 = tk.Frame(MAIN_WINDOW, bg="gray", height=1, bd=0)
 separator2.pack(fill="x")
@@ -90,7 +100,7 @@ entry = tk.Entry(
     insertbackground=FG_COLOR,
     bd=0,
 )
-entry.pack(pady=(0, 20), fill="x", ipady=5, ipadx=5)  
+entry.pack(pady=(0, 20), fill="x", ipady=5, ipadx=5)
 
 # Create a big button with dark theme
 button = tk.Button(
@@ -107,6 +117,8 @@ button.pack(fill="x")
 # Add padding around the entire window
 padding = 20
 MAIN_WINDOW.configure(padx=padding, pady=padding)
+
+MAIN_WINDOW.bind("<Configure>", on_resize)
 
 # Run the application
 MAIN_WINDOW.mainloop()

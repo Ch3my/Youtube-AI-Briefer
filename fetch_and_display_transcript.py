@@ -8,6 +8,7 @@ def fetch_and_display_transcript(url, callback):
 
     if transcript is None:
         # messagebox.showinfo("Input", "No se logró obtener el transcript :(")
+        callback(None)
         return
 
     analisis = resume_transcript(transcript)
