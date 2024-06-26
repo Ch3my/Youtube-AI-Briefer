@@ -12,6 +12,8 @@ class Globals:
         self.ENTRY_BG_COLOR = "#3C3C3C"
         self.ENTRY_FG_COLOR = "#FFFFFF"
         self.FEEDBACK_MSG = ""
+        self.CONFIG_FILE = "config.json"
+        self.AVAILABLE_MODELS = ["claude-3-haiku-20240307", "gpt-3.5-turbo", "gpt-4o"]
 
     def get_feedback_msg(self):
         return self.FEEDBACK_MSG
@@ -34,6 +36,8 @@ BTN_BG_COLOR = globals_instance.BTN_BG_COLOR
 ENTRY_BG_COLOR = globals_instance.ENTRY_BG_COLOR
 ENTRY_FG_COLOR = globals_instance.ENTRY_FG_COLOR
 FEEDBACK_MSG = globals_instance.FEEDBACK_MSG
+CONFIG_FILE = globals_instance.CONFIG_FILE
+AVAILABLE_MODELS = globals_instance.AVAILABLE_MODELS
 
 # Define a function to get feedback message
 def get_feedback_msg():
