@@ -43,7 +43,7 @@ Se intento usar Poetry (https://python-poetry.org/) para manejar las dependencia
 Instalar dependencias:
 
 ``` 
-pip install pyinstaller youtube_transcript_api openai markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic
+pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic
 ```
 
 Con esto ya se puede desarrollar en VS Code e iniciar el programa haciendo correr `main.py`
@@ -53,14 +53,18 @@ Con esto ya se puede desarrollar en VS Code e iniciar el programa haciendo corre
 Este comando creara un ejecutable en la carpeta `dist/`
 
 ```
-pyinstaller -n "Youtube AI Briefer" --onefile --windowed --icon=assets/favicon.ico main.py
+pyinstaller -n "Youtube AI Briefer" --collect-all tkinterweb --onefile --windowed --icon=assets/favicon.ico main.py
 ```
 
 o dependiendo de tu entorno (pyinstaller como modulo |case-sensitive| )
 
 ```
-python -m PyInstaller -n "Youtube AI Briefer" --onefile --windowed --icon=assets/favicon.ico main.py
+python -m PyInstaller -n "Youtube AI Briefer" --collect-all tkinterweb --onefile --windowed --icon=assets/favicon.ico main.py
 ```
+
+Nota. Ocurio un error que decia "ModuleNotFoundError: No module named 'bindings'" luego de compilar, aunque durante la compilacion no dio ningun mensaje. Para solucionar hay que incluir `--collect-all tkinterweb`
+
+https://stackoverflow.com/questions/68027424/python-modulenotfounderror-no-module-named-bindings-error-only-when-i-compi
 
 ## Notas ##
 

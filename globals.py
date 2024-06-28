@@ -1,10 +1,8 @@
-from openai import OpenAI
 import tkinter as tk
 
 # SINGLETON PATTERN
 class Globals:
     def __init__(self):
-        self.OPENAI_CLIENT = OpenAI()
         self.MAIN_WINDOW = tk.Tk()
         self.BG_COLOR = "#2E2E2E"
         self.FG_COLOR = "#FFFFFF"
@@ -13,7 +11,7 @@ class Globals:
         self.ENTRY_FG_COLOR = "#FFFFFF"
         self.FEEDBACK_MSG = ""
         self.CONFIG_FILE = "config.json"
-        self.AVAILABLE_MODELS = ["claude-3-haiku-20240307", "gpt-3.5-turbo", "gpt-4o"]
+        self.AVAILABLE_MODELS = ["claude-3-haiku-20240307", "claude-3-5-sonnet-20240620", "gpt-3.5-turbo", "gpt-4o"]
 
     def get_feedback_msg(self):
         return self.FEEDBACK_MSG
@@ -28,7 +26,6 @@ class Globals:
 globals_instance = Globals()
 
 # Define module-level variables
-OPENAI_CLIENT = globals_instance.OPENAI_CLIENT
 MAIN_WINDOW = globals_instance.MAIN_WINDOW
 BG_COLOR = globals_instance.BG_COLOR
 FG_COLOR = globals_instance.FG_COLOR
