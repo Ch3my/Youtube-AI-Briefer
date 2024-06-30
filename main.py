@@ -14,6 +14,7 @@ from globals import (
 import threading
 from screens.config_screen import config_screen
 from ai.process_info import fn
+from screens.display_result import display_result
 
 # Define a callback function to update the UI after thread completes
 def update_ui(message):
@@ -49,6 +50,9 @@ MAIN_WINDOW.geometry("450x250")  # Set the size of the window
 
 # Configure the main window with dark theme
 MAIN_WINDOW.configure(bg=BG_COLOR, padx=20, pady=20)
+
+MAIN_WINDOW.after(0, display_result, "transcript", "final_document")
+
 
 # Create a label for displaying messages to the user
 feedback_label = tk.Label(

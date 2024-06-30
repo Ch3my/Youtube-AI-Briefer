@@ -7,9 +7,11 @@
 
 # Quiza Crear resume y condensa en archivos separados?
 
+import threading
 from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from ai.rag_functions import build_rag
 from functions.get_transcript import get_transcript
 from functions.load_config import load_config
 from langchain_core.prompts import ChatPromptTemplate
@@ -17,7 +19,6 @@ from langchain_core.output_parsers import StrOutputParser
 from functions.logger import log_message
 from globals import MAIN_WINDOW, set_feedback_msg
 from screens.display_result import display_result
-import os
 
 def fn(url, callback):
     config = load_config()
@@ -30,7 +31,11 @@ def fn(url, callback):
     if transcript is None:
         callback(None)
         return
-    
+
+    # A penas tenemos el Transcript enviamos a crear el Rag, asi cuando probablemente terminenos el RAG
+    # antes de que termine el procesamiento. La coma es necesaria, sino piensa que cada caracter es un argumento
+    threading.Thread(target=build_rag, args=(transcript,)).start()
+
     formatted_length_fstring = f"{len(transcript):,}"
     set_feedback_msg(f"Transcript obtenido ({formatted_length_fstring} caracteres)")
 
@@ -44,12 +49,14 @@ def fn(url, callback):
         if "claude" in config["condensaModel"]:
             # max_tokens por defecto es 1024, si intenta generar una respuesta mas grande simplemente
             # la trunca, el numero maximo depende del modelo
-            condensa_model = ChatAnthropic(model=config["condensaModel"], max_tokens=3072)
+            condensa_model = ChatAnthropic(
+                model=config["condensaModel"], max_tokens=3072
+            )
 
         if "gpt" in config["condensaModel"]:
             # Por defecto max_tokens en ChatOpenAI is None, supongo que no tiene limite
             condensa_model = ChatOpenAI(model=config["condensaModel"])
-            
+
     except Exception as e:
         callback("Error al configurar los modelos, quiza falta una API_KEY")
         print("Error al configurar los modelos, quiza falta una API_KEY")
@@ -198,7 +205,7 @@ def fn(url, callback):
 
     # Ejecuta
     condensa_chain = condensa_template | condensa_model | StrOutputParser()
-    
+
     try:
         final_document = condensa_chain.invoke({"notes": "\n\n".join(notes)})
     except Exception as e:

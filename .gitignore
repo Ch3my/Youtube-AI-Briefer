@@ -26,6 +26,8 @@ share/python-wheels/
 MANIFEST
 config.json
 log.txt
+vector-db/
+youtube_ai_env/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

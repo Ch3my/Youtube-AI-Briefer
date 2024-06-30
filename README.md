@@ -43,10 +43,24 @@ Se intento usar Poetry (https://python-poetry.org/) para manejar las dependencia
 Instalar dependencias:
 
 ``` 
-pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic
+pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic langchain_chroma langchain-huggingface
 ```
 
 Con esto ya se puede desarrollar en VS Code e iniciar el programa haciendo correr `main.py`
+
+NOTA. si error al instalar langchain-huggingface quiza se deba a esto: https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry#enable-long-paths-in-windows-10-version-1607-and-later
+
+### Entorno virtual ###
+
+Crear entorno
+
+`python -m venv youtube_ai_env`
+
+Activar entorno
+
+`youtube_ai_env\Script\Activate`
+
+Luego instalar paquetes dentro del entorno
 
 ## Compilar a Ejecutable ##
 
