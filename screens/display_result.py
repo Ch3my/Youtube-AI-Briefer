@@ -27,9 +27,6 @@ def display_result(transcript, result, content_type="markdown"):
     # Create sidebar frame
     sidebar_frame = tk.Frame(result_window, bg=BG_COLOR)
     sidebar_frame.grid(row=0, column=1, sticky="nsew", padx=(20, 0))
-    # sidebar_frame.grid_propagate(
-    #     False
-    # )  # Prevent the frame from resizing based on its content
 
     # Configure the grid to allocate space to the frames
     result_window.grid_columnconfigure(0, weight=1)
@@ -130,6 +127,7 @@ def display_result(transcript, result, content_type="markdown"):
         bg=BG_COLOR,
         fg="#CCC",
         insertbackground="#CCC",
+        height=1
     )
     conversation_area.pack(fill=tk.BOTH, expand=True,pady=(0, 30), ipadx=10, ipady=10)
 
@@ -166,7 +164,7 @@ def display_result(transcript, result, content_type="markdown"):
             # Function to run query_rag in a separate thread
             def rag_thread():
                 try:
-                    rag_response = query_rag(user_message, True)
+                    rag_response = query_rag(user_message, False)
                     response_queue.put(("success", rag_response))
                 except Exception as e:
                     response_queue.put(("error", str(e)))

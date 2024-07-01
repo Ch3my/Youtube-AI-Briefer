@@ -18,18 +18,22 @@ def config_screen():
 
     def on_update_window(event):
         info.config(wraplength=config_window.winfo_width() - 50)
+        api_key_info.config(wraplength=config_window.winfo_width() - 50)
         model_info.config(wraplength=config_window.winfo_width() - 50)
 
     def on_save():
         config["resumeModel"] = resume_model_var.get()
         config["condensaModel"] = condensa_model_var.get()
         config["resumeChunkSize"] = int(chunk_size_var.get())
+        config["ragModel"] = rag_model_var.get()
+        config["ragSearchType"] = rag_search_type_var.get()
+        config["ragSearchK"] = int(rag_search_k_var.get())
         save_config(config)
         config_window.destroy()
 
     config_window = tk.Toplevel(MAIN_WINDOW)
     config_window.title("Config")
-    config_window.geometry("500x600")  # Increased height to accommodate new input
+    config_window.geometry("600x600")  # Increased height to accommodate new inputs
     config_window.configure(bg=BG_COLOR)
 
     content_frame = tk.Frame(config_window, bg=BG_COLOR, padx=20, pady=20)
@@ -79,7 +83,7 @@ def config_screen():
     chunk_size_label = tk.Label(content_frame, text="Resume Chunk Size:", font=("Consolas", 14), bg=BG_COLOR, fg=FG_COLOR)
     chunk_size_label.grid(row=4, column=0, sticky="w", padx=(0, 10), pady=5)
 
-    chunk_size_var = tk.StringVar(value=str(config.get("resumeChunkSize", 1000)))  # Default to 1000 if not set
+    chunk_size_var = tk.StringVar(value=str(config.get("resumeChunkSize", 5000)))
     chunk_size_entry = ttk.Entry(content_frame, textvariable=chunk_size_var, font=("Consolas", 14))
     chunk_size_entry.grid(row=4, column=1, sticky="ew", pady=5)
 
@@ -91,7 +95,30 @@ def config_screen():
     condensa_model_combo = ttk.Combobox(content_frame, textvariable=condensa_model_var, values=AVAILABLE_MODELS, font=("Consolas", 14), height=10)
     condensa_model_combo.grid(row=5, column=1, sticky="ew", pady=5)
 
+    # RAG Model Selection
+    rag_label = tk.Label(content_frame, text="RAG Model:", font=("Consolas", 14), bg=BG_COLOR, fg=FG_COLOR)
+    rag_label.grid(row=6, column=0, sticky="w", padx=(0, 10), pady=5)
 
+    rag_model_var = tk.StringVar(value=config.get("ragModel", AVAILABLE_MODELS[0]))
+    rag_model_combo = ttk.Combobox(content_frame, textvariable=rag_model_var, values=AVAILABLE_MODELS, font=("Consolas", 14), height=10)
+    rag_model_combo.grid(row=6, column=1, sticky="ew", pady=5)
+
+    # RAG Search Type Selection
+    rag_search_type_label = tk.Label(content_frame, text="RAG Search Type:", font=("Consolas", 14), bg=BG_COLOR, fg=FG_COLOR)
+    rag_search_type_label.grid(row=7, column=0, sticky="w", padx=(0, 10), pady=5)
+
+    rag_search_types = ["similarity", "mmr"]  # Add more types if needed
+    rag_search_type_var = tk.StringVar(value=config.get("ragSearchType", "similarity"))
+    rag_search_type_combo = ttk.Combobox(content_frame, textvariable=rag_search_type_var, values=rag_search_types, font=("Consolas", 14), height=10)
+    rag_search_type_combo.grid(row=7, column=1, sticky="ew", pady=5)
+
+    # RAG Search K Input
+    rag_search_k_label = tk.Label(content_frame, text="RAG Search K:", font=("Consolas", 14), bg=BG_COLOR, fg=FG_COLOR)
+    rag_search_k_label.grid(row=8, column=0, sticky="w", padx=(0, 10), pady=5)
+
+    rag_search_k_var = tk.StringVar(value=str(config.get("ragSearchK", 5)))
+    rag_search_k_entry = ttk.Entry(content_frame, textvariable=rag_search_k_var, font=("Consolas", 14))
+    rag_search_k_entry.grid(row=8, column=1, sticky="ew", pady=5)
 
     # Save Button
     save_button = tk.Button(
@@ -103,7 +130,7 @@ def config_screen():
         font=("Consolas", 14),
         bd=0
     )
-    save_button.grid(row=6, column=0, columnspan=2, pady=20, sticky="we")
+    save_button.grid(row=9, column=0, columnspan=2, pady=20, sticky="we")
 
     # Configure grid weights
     content_frame.columnconfigure(1, weight=1)

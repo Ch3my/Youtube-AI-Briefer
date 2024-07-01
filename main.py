@@ -51,9 +51,6 @@ MAIN_WINDOW.geometry("450x250")  # Set the size of the window
 # Configure the main window with dark theme
 MAIN_WINDOW.configure(bg=BG_COLOR, padx=20, pady=20)
 
-MAIN_WINDOW.after(0, display_result, "transcript", "final_document")
-
-
 # Create a label for displaying messages to the user
 feedback_label = tk.Label(
     MAIN_WINDOW,

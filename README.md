@@ -54,11 +54,11 @@ NOTA. si error al instalar langchain-huggingface quiza se deba a esto: https://l
 
 Crear entorno
 
-`python -m venv youtube_ai_env`
+`python -m venv .env`
 
 Activar entorno
 
-`youtube_ai_env\Script\Activate`
+`.env\Script\Activate`
 
 Luego instalar paquetes dentro del entorno
 
@@ -67,16 +67,16 @@ Luego instalar paquetes dentro del entorno
 Este comando creara un ejecutable en la carpeta `dist/`
 
 ```
-pyinstaller -n "Youtube AI Briefer" --collect-all tkinterweb --onefile --windowed --icon=assets/favicon.ico main.py
+pyinstaller -n "Youtube AI Briefer" --collect-all tkinterweb --collect-all langchain --collect-all scipy --collect-all sentence_transformers --collect-all transformers --collect-all posthog --collect-all chromadb --noconfirm --windowed --icon=assets/favicon.ico main.py
 ```
 
 o dependiendo de tu entorno (pyinstaller como modulo |case-sensitive| )
 
 ```
-python -m PyInstaller -n "Youtube AI Briefer" --collect-all tkinterweb --onefile --windowed --icon=assets/favicon.ico main.py
+python -m PyInstaller -n "Youtube AI Briefer" --collect-all tkinterweb --collect-all langchain --collect-all scipy --collect-all sentence_transformers --collect-all transformers --collect-all posthog --collect-all chromadb --noconfirm --windowed --icon=assets/favicon.ico main.py
 ```
 
-Nota. Ocurio un error que decia "ModuleNotFoundError: No module named 'bindings'" luego de compilar, aunque durante la compilacion no dio ningun mensaje. Para solucionar hay que incluir `--collect-all tkinterweb`
+Nota. Ocurio un error que decia "ModuleNotFoundError: No module named 'bindings'" luego de compilar, aunque durante la compilacion no dio ningun mensaje. Para solucionar hay que incluir `--collect-all tkinterweb` los otros --collect-all son por mesajes similares
 
 https://stackoverflow.com/questions/68027424/python-modulenotfounderror-no-module-named-bindings-error-only-when-i-compi
 

@@ -28,6 +28,7 @@ config.json
 log.txt
 vector-db/
 youtube_ai_env/
+dist/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
