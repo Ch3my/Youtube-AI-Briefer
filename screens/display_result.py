@@ -9,6 +9,29 @@ from tkinter import scrolledtext
 import pyperclip
 from tkinterweb import HtmlFrame
 
+def show_context_fn(context):
+    window_content = ""
+    context_window = tk.Toplevel(MAIN_WINDOW)
+    context_window.title("Context")
+    context_window.geometry("600x600")  # Increased height to accommodate new inputs
+    context_window.configure(bg=BG_COLOR, padx=20, pady=20)
+
+    text_area = scrolledtext.ScrolledText(
+        context_window,
+        wrap=tk.WORD,
+        font=("Consolas", 14),
+        bg=BG_COLOR,
+        fg="#CCC",
+        insertbackground=BG_COLOR,
+    )
+    text_area.pack(expand=True, fill=tk.BOTH)
+
+    for doc in context:
+        window_content += doc.page_content + "\n\n"
+    
+    text_area.insert(tk.END, window_content)
+    text_area.config(state=tk.DISABLED)
+
 def display_result(transcript, result, content_type="markdown"):
     response_queue = multiprocessing.Queue()
     result_window = tk.Toplevel(MAIN_WINDOW)
@@ -180,7 +203,9 @@ def display_result(transcript, result, content_type="markdown"):
                     # Remove the "thinking" message
                     conversation_area.delete("end-3l", "end-1l")
                     if response_type == "success":
-                        conversation_area.insert(tk.END, f"NIA: {response}\n\n")
+                        conversation_area.insert(tk.END, f"NIA: {response['answer']}\n\n")
+                        context_btn.config(state=tk.NORMAL)  # Enable context button when response is available
+                        context_btn.config(command=lambda: show_context_fn(response.get("context", [])))
                     else:
                         conversation_area.insert(tk.END, f"Error: {response}\n\n")
                     conversation_area.config(state=tk.DISABLED)
@@ -194,6 +219,20 @@ def display_result(transcript, result, content_type="markdown"):
 
             # Start checking for the response
             result_window.after(100, check_response)
+
+    # Add context button
+    context_btn = tk.Button(
+        sidebar_frame,
+        text="ℜ",
+        command=lambda: show_context_fn([]),  # Initial command with empty context
+        height=1,
+        bg=BTN_BG_COLOR,
+        fg=FG_COLOR,
+        font=("Consolas", 14),
+        bd=0,
+        state=tk.DISABLED  # Initially disabled
+    )
+    context_btn.pack(side=tk.LEFT, padx=(0, 10))
 
     send_button = tk.Button(
         sidebar_frame,
