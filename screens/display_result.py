@@ -9,7 +9,6 @@ from tkinter import scrolledtext
 import pyperclip
 from tkinterweb import HtmlFrame
 
-
 def show_context_fn(context):
     window_content = ""
     context_window = tk.Toplevel(MAIN_WINDOW)
