@@ -18,7 +18,7 @@ La aplicacion funciona obteniendo el transcript de un video de youtube y rompien
 
 Luego toma todas las notas y las condensa en un solo documento que es el que se le muestra al usuario.
 
-Para tomar las notas utiliza GPT-3.5 y para la condensacion GPT-4o
+Para tomar las notas utiliza GPT-3.5 y para la condensacion GPT-4o. Esto es completamente custumizable en la configuracion.
 
 Aunque se puede pasar el texto completo a GPT-4, es mas caro. Ademas, si el texto es largo aumenta mas los precios debido a la gran cantidad de tokens de entrada.
 
@@ -27,6 +27,13 @@ Si es un texto de un video corto no importaria tanto pero si es un video largo e
 Asi solo le entregamos la informacion resumida a GPT-4 y este ejecuta solo el ultimo paso, con menos texto lo que resulta en costos reducidos.
 
 Mezclar los modelos reduce costo porque la cantidad de token que procesa GPT-4 es bastante menor al tener la informacion resumida ya. Estamos hablando de un 70% menos de informacion que procesa GPT-4 por resumirla antes
+
+### RAG, chat con la transcripcion ###
+Al obtener el transcript tambien Genera un RAG del texto, permitiendo al usuario hacer preguntas sobre el video y la AI le responde utilizando el contexto, esto es util en el caso de que quieras mas informacion sobre un tema en el resumen.
+
+Al hacer preguntas al RAG tambien hay un boton que te muestra los extractos del texto que utilizo para generar la respuesta.
+
+Para crear el RAG estamos usando embeddings de manera local, por lo tanto no incurre en gastos, pero depende de la maquina local. Usualmente toma unos 3 segundos de procesamiento para crearlo.
 
 ## Calidad entre una sola tarea (1 paso) y preprocesar (2 pasos) ##
 
