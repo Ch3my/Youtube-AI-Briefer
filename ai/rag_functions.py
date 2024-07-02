@@ -41,13 +41,14 @@ def build_rag(transcript):
     global _db
     global chat_id
     vector_db_directory = "./vector-db"
-    
-    # split it into chunks. TODO chunk_size en Config?
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=0)
+    config = load_config()
+
+    # split it into chunks.
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=config["ragChunkSize"], chunk_overlap=0)
     docs = [Document(page_content=x) for x in text_splitter.split_text(transcript)]
     embeddings = get_embeddings()
   
-    # Check if the directory exists and delete it. Aunque se suopne que se sobreescribe solo
+    # Check if the directory exists and delete it. Aunque se supone que se sobreescribe solo
     # a veces llegan datos de otros videos
     if os.path.exists(vector_db_directory) and os.path.isdir(vector_db_directory):
         shutil.rmtree(vector_db_directory)

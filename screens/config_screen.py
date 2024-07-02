@@ -28,12 +28,13 @@ def config_screen():
         config["ragModel"] = rag_model_var.get()
         config["ragSearchType"] = rag_search_type_var.get()
         config["ragSearchK"] = int(rag_search_k_var.get())
+        config["ragChunkSize"] = int(rag_chunk_size_var.get())  # New line
         save_config(config)
         config_window.destroy()
 
     config_window = tk.Toplevel(MAIN_WINDOW)
     config_window.title("Config")
-    config_window.geometry("600x600")  # Increased height to accommodate new inputs
+    config_window.geometry("600x650")  # Increased height to accommodate new input
     config_window.configure(bg=BG_COLOR)
 
     content_frame = tk.Frame(config_window, bg=BG_COLOR, padx=20, pady=20)
@@ -120,6 +121,14 @@ def config_screen():
     rag_search_k_entry = ttk.Entry(content_frame, textvariable=rag_search_k_var, font=("Consolas", 14))
     rag_search_k_entry.grid(row=8, column=1, sticky="ew", pady=5)
 
+    # RAG Chunk Size Input (New)
+    rag_chunk_size_label = tk.Label(content_frame, text="RAG Chunk Size:", font=("Consolas", 14), bg=BG_COLOR, fg=FG_COLOR)
+    rag_chunk_size_label.grid(row=9, column=0, sticky="w", padx=(0, 10), pady=5)
+
+    rag_chunk_size_var = tk.StringVar(value=str(config.get("ragChunkSize", 1000)))
+    rag_chunk_size_entry = ttk.Entry(content_frame, textvariable=rag_chunk_size_var, font=("Consolas", 14))
+    rag_chunk_size_entry.grid(row=9, column=1, sticky="ew", pady=5)
+
     # Save Button
     save_button = tk.Button(
         content_frame,
@@ -130,7 +139,7 @@ def config_screen():
         font=("Consolas", 14),
         bd=0
     )
-    save_button.grid(row=9, column=0, columnspan=2, pady=20, sticky="we")
+    save_button.grid(row=10, column=0, columnspan=2, pady=20, sticky="we")
 
     # Configure grid weights
     content_frame.columnconfigure(1, weight=1)

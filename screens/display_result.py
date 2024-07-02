@@ -9,6 +9,7 @@ from tkinter import scrolledtext
 import pyperclip
 from tkinterweb import HtmlFrame
 
+
 def show_context_fn(context):
     window_content = ""
     context_window = tk.Toplevel(MAIN_WINDOW)
@@ -28,9 +29,10 @@ def show_context_fn(context):
 
     for doc in context:
         window_content += doc.page_content + "\n\n"
-    
+
     text_area.insert(tk.END, window_content)
     text_area.config(state=tk.DISABLED)
+
 
 def display_result(transcript, result, content_type="markdown"):
     response_queue = multiprocessing.Queue()
@@ -150,9 +152,9 @@ def display_result(transcript, result, content_type="markdown"):
         bg=BG_COLOR,
         fg="#CCC",
         insertbackground="#CCC",
-        height=1
+        height=1,
     )
-    conversation_area.pack(fill=tk.BOTH, expand=True,pady=(0, 30), ipadx=10, ipady=10)
+    conversation_area.pack(fill=tk.BOTH, expand=True, pady=(0, 30), ipadx=10, ipady=10)
 
     input_area = tk.Text(
         sidebar_frame,
@@ -161,7 +163,7 @@ def display_result(transcript, result, content_type="markdown"):
         bg=BG_COLOR,
         fg="#CCC",
         insertbackground="#CCC",
-        height=2
+        height=2,
     )
     input_area.pack(fill=tk.X, pady=(0, 10))
 
@@ -203,9 +205,15 @@ def display_result(transcript, result, content_type="markdown"):
                     # Remove the "thinking" message
                     conversation_area.delete("end-3l", "end-1l")
                     if response_type == "success":
-                        conversation_area.insert(tk.END, f"NIA: {response['answer']}\n\n")
-                        context_btn.config(state=tk.NORMAL)  # Enable context button when response is available
-                        context_btn.config(command=lambda: show_context_fn(response.get("context", [])))
+                        conversation_area.insert(
+                            tk.END, f"NIA: {response['answer']}\n\n"
+                        )
+                        context_btn.config(
+                            state=tk.NORMAL
+                        )  # Enable context button when response is available
+                        context_btn.config(
+                            command=lambda: show_context_fn(response.get("context", []))
+                        )
                     else:
                         conversation_area.insert(tk.END, f"Error: {response}\n\n")
                     conversation_area.config(state=tk.DISABLED)
@@ -230,7 +238,7 @@ def display_result(transcript, result, content_type="markdown"):
         fg=FG_COLOR,
         font=("Consolas", 14),
         bd=0,
-        state=tk.DISABLED  # Initially disabled
+        state=tk.DISABLED,  # Initially disabled
     )
     context_btn.pack(side=tk.LEFT, padx=(0, 10))
 
@@ -242,7 +250,7 @@ def display_result(transcript, result, content_type="markdown"):
         fg=FG_COLOR,
         font=("Consolas", 16),
         height=1,
-        bd=0
+        bd=0,
     )
     send_button.pack(fill=tk.X)
 
