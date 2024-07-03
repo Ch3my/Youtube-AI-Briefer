@@ -2,6 +2,8 @@ import os
 import random
 import string
 import shutil
+from langchain.globals import set_debug
+
 from langchain_anthropic import ChatAnthropic
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -17,6 +19,10 @@ from langchain_core.prompts import MessagesPlaceholder
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain.retrievers import EnsembleRetriever
+from langchain_community.retrievers import BM25Retriever
+from langchain_community.vectorstores import FAISS
+from langchain_core.output_parsers import StrOutputParser
 
 # NOTE. Pseudo-Singleton, not private constructor
 
@@ -24,9 +30,16 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 _db = None
 chat_id = ""
 
+bm25_retriever = None
+faiss_vectorstore = None
+
+### Statefully manage chat history ###
+store = {}
+
 def generate_random_string(length):
     letters_and_digits = string.ascii_letters + string.digits
-    return ''.join(random.choice(letters_and_digits) for i in range(length))
+    return "".join(random.choice(letters_and_digits) for i in range(length))
+
 
 def get_embeddings():
     model_name = "sentence-transformers/all-mpnet-base-v2"
@@ -37,34 +50,43 @@ def get_embeddings():
     )
 
 
+def get_session_history(session_id: str) -> BaseChatMessageHistory:
+    global store
+    if session_id not in store:
+        store[session_id] = ChatMessageHistory()
+    return store[session_id]
+
+
 def build_rag(transcript):
     global _db
     global chat_id
-    vector_db_directory = "./vector-db"
+    global bm25_retriever
+    global faiss_vectorstore
     config = load_config()
 
     # split it into chunks.
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=config["ragChunkSize"], chunk_overlap=0)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=config["ragChunkSize"], chunk_overlap=0
+    )
     docs = [Document(page_content=x) for x in text_splitter.split_text(transcript)]
     embeddings = get_embeddings()
-  
-    # Check if the directory exists and delete it. Aunque se supone que se sobreescribe solo
-    # a veces llegan datos de otros videos
-    if os.path.exists(vector_db_directory) and os.path.isdir(vector_db_directory):
-        shutil.rmtree(vector_db_directory)
-        
-    # load it into Chroma
-    _db = Chroma.from_documents(docs, embeddings, persist_directory="./vector-db")
+
+    # load it into Chroma. Solo en memoria, porque reemplazaremos frecuentemente
+    _db = Chroma.from_documents(docs, embeddings)
     chat_id = generate_random_string(10)
+
+    # Prepara los retriever para Hybrid-Search
+    bm25_retriever = BM25Retriever.from_documents(docs)
+    bm25_retriever.k = config["ragSearchK"]
+    faiss_vectorstore = FAISS.from_documents(docs, embeddings)
+
     return _db
 
 
 def get_db():
     global _db
     if _db is None:
-        # If no db is loaded, load the existing one
-        embeddings = get_embeddings()
-        _db = Chroma(persist_directory="./vector-db", embedding_function=embeddings)
+        raise ValueError("Database has not been initialized. Call build_rag() first.")
     return _db
 
 
@@ -72,20 +94,40 @@ def get_retriever():
     config = load_config()
     db = get_db()
     # Create a retriever from the database
+    # score_threshold 1 = more relavant documents
     return db.as_retriever(
-        search_type=config["ragSearchType"], search_kwargs={"k": config["ragSearchK"]}
+        search_type=config["ragSearchType"],
+        search_kwargs={"k": config["ragSearchK"]},
     )
+
+
+def get_hybrid_retriever():
+    global bm25_retriever
+    global faiss_vectorstore
+    config = load_config()
+    # score_threshold 1 = more relavant documents
+    faiss_retriever = faiss_vectorstore.as_retriever(
+        search_type=config["ragSearchType"],
+        search_kwargs={"k": config["ragSearchK"]},
+    )
+    ensemble_retriever = EnsembleRetriever(
+        retrievers=[bm25_retriever, faiss_retriever], weights=[0.5, 0.5]
+    )
+    return ensemble_retriever
 
 
 def query_rag(query, verbose=False):
     global chat_id
-    retriever = get_retriever()
+    # retriever = get_retriever()
+    retriever = get_hybrid_retriever()
     rag_llm = None
     config = load_config()
 
     # Esto es solo para Debug
-    relevant_docs = retriever.invoke(query)
     if verbose:
+        set_debug(True)
+        retriever_test = get_retriever()
+        relevant_docs = retriever_test.invoke(query)
         for i, doc in enumerate(relevant_docs, 1):
             print(f"Document {i}:\n {doc.page_content}\n")
     # Fin Debug
@@ -101,6 +143,19 @@ def query_rag(query, verbose=False):
         print(e)
         return
 
+    # TEST
+    # query_test = f"""
+    # "Responde a la pregunta basándote únicamente en el siguiente contexto y extrae una respuesta significativa."
+    # "Por favor, escribe en oraciones completas con la ortografía y puntuación correctas. Si tiene sentido, usa listas."
+    # "Si el contexto no contiene la respuesta, simplemente responde que no puedes encontrar una respuesta."
+    # "\n\n"
+    # "{" ".join(doc.page_content for doc in relevant_docs)}"
+    # """
+    # test_chain = rag_llm | StrOutputParser()
+    # response_test = test_chain.invoke(query_test)
+    # print(response_test)  
+    # TEST
+    
     # Basado en https://python.langchain.com/v0.2/docs/how_to/qa_chat_history_how_to/#prompt
     contextualize_q_system_prompt = (
         "Dado un historial de chat y la última pregunta del usuario,"
@@ -141,17 +196,7 @@ def query_rag(query, verbose=False):
     # Esto es algo que viene en langchain: https://python.langchain.com/v0.2/docs/tutorials/rag/#built-in-chains
     # pero funciona bien, no tenemos que crear a mano una chain (creo)
     question_answer_chain = create_stuff_documents_chain(rag_llm, prompt)
-    # rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-    # response = rag_chain.invoke({"input": query})
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
-
-    ### Statefully manage chat history ###
-    store = {}
-
-    def get_session_history(session_id: str) -> BaseChatMessageHistory:
-        if session_id not in store:
-            store[session_id] = ChatMessageHistory()
-        return store[session_id]
 
     conversational_rag_chain = RunnableWithMessageHistory(
         rag_chain,
@@ -167,10 +212,3 @@ def query_rag(query, verbose=False):
     )
 
     return response
-
-
-# Example usage:
-# transcript = "Your transcript text here"
-# build_rag(transcript)  # Only need to call this once to create/update the database
-# query_rag("de que trata el texto?")
-# query_rag("otra pregunta")  # Will reuse the existing database

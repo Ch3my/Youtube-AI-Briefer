@@ -28,6 +28,7 @@ def show_context_fn(context):
 
     for doc in context:
         window_content += doc.page_content + "\n\n"
+        window_content += "==============================" + "\n\n"
 
     text_area.insert(tk.END, window_content)
     text_area.config(state=tk.DISABLED)

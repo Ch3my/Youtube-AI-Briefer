@@ -35,6 +35,8 @@ Al hacer preguntas al RAG tambien hay un boton que te muestra los extractos del 
 
 Para crear el RAG estamos usando embeddings de manera local, por lo tanto no incurre en gastos, pero depende de la maquina local. Usualmente toma unos 3 segundos de procesamiento para crearlo.
 
+Tambien se configuro un `Hybrid-Search` que utiliza busqueda semantica como de palabras claves, que segun las pruebas mejora el contexto un poco (10%), segun las pruebas mezclar el hybrid-search con `MMR` mejora la respuesta final un poco mas (25%)
+
 ## Calidad entre una sola tarea (1 paso) y preprocesar (2 pasos) ##
 
 Obviamente el mejor resumen es utilizar GPT-4 para ambos pasos, resumir y procesar al final.
@@ -50,7 +52,7 @@ Se intento usar Poetry (https://python-poetry.org/) para manejar las dependencia
 Instalar dependencias:
 
 ``` 
-pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic langchain_chroma langchain-huggingface
+pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic langchain_chroma langchain-huggingface rank_bm25 faiss-cpu
 ```
 
 Con esto ya se puede desarrollar en VS Code e iniciar el programa haciendo correr `main.py`
