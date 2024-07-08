@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import threading
 import tkinter as tk
 from tkinter import ttk
 
@@ -31,7 +32,9 @@ def config_screen():
         config["ragChunkSize"] = int(rag_chunk_size_var.get())  # New line
         save_config(config)
         config_window.destroy()
-
+    # For Debug
+    # mythreads = threading.enumerate()
+    
     config_window = tk.Toplevel(MAIN_WINDOW)
     config_window.title("Config")
     config_window.geometry("600x650")  # Increased height to accommodate new input

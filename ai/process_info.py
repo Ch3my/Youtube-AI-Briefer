@@ -34,8 +34,12 @@ def fn(url, callback):
 
     # A penas tenemos el Transcript enviamos a crear el Rag, asi cuando probablemente terminenos el RAG
     # antes de que termine el procesamiento. La coma es necesaria, sino piensa que cada caracter es un argumento
-    threading.Thread(target=build_rag, args=(transcript,)).start()
-
+    rag_thread = threading.Thread(target=build_rag, args=(transcript,))
+    # A daemon thread is a thread that doesn’t prevent the program from exiting. 
+    # If the program ends or all non-daemon threads finish execution, any remaining daemon threads are stopped.
+    rag_thread.setDaemon(True)
+    rag_thread.start()
+    
     formatted_length_fstring = f"{len(transcript):,}"
     set_feedback_msg(f"Transcript obtenido ({formatted_length_fstring} caracteres)")
 
@@ -76,7 +80,7 @@ def fn(url, callback):
             - Datos, estadísticas o cifras relevantes
             - Citas textuales importantes (usar comillas y indicar la ubicación aproximada en el texto)
 
-        4. Captura la estructura y organización del texto, incluyendo:
+        4. Respeta la estructura original del texto, incluyendo:
             - La progresión lógica de las ideas
             - Conexiones entre diferentes secciones o conceptos
             - Cualquier jerarquía o categorización presente
