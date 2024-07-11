@@ -4,9 +4,7 @@ Transcribe un video de Youtube y lo procesa con IA para obtener un resumen compl
 
 Construida con Tkinter (multiplataforma)
 
-![Youtube AI Briefer main Window](assets/main-window-example.jpg "Youtube AI Briefer main Window")
-
-![Youtube AI Briefer Result Window](assets/result-window-example.jpg "Youtube AI Briefer Result Window")
+https://github.com/Ch3my/Youtube-AI-Briefer/assets/35230589/bc8f1b97-958e-41c4-aa74-0a564470f50b
 
 ## Googla Colab ##
 
