@@ -148,8 +148,6 @@ def fn(url, callback):
     set_feedback_msg("Generando documento final")
 
     condensa_prompt = """
-        # Instrucciones para la generación de un documento completo basado en notas
-
         1. Escribe como Nia, eres mi asistente, escribe como si me estuvieras entregando el informe en persona, no es necesario que te presentes ya nos conocemos.
         2. Redacta un documento coherente y exhaustivo en español, utilizando formato Markdown, que incorpore toda la información de las notas. El documento debe incluir:
 
