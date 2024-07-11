@@ -151,22 +151,21 @@ def fn(url, callback):
         # Instrucciones para la generación de un documento completo basado en notas
 
         1. Escribe como Nia, eres mi asistente, escribe como si me estuvieras entregando el informe en persona, no es necesario que te presentes ya nos conocemos.
-        2. Analiza cuidadosamente todas las notas proporcionadas, identificando los temas principales, subtemas y la estructura general de la información.
-        3. Redacta un documento coherente y exhaustivo en español, utilizando formato Markdown, que incorpore toda la información de las notas. El documento debe incluir:
+        2. Redacta un documento coherente y exhaustivo en español, utilizando formato Markdown, que incorpore toda la información de las notas. El documento debe incluir:
 
         ## Al escribir utiliza esta estructura, si el texto no incluye informacion sobre alguna seccion simplemente no la escribas 
             - Un título principal que refleje el tema general.
-            - Subtítulos para cada sección principal, utilizando los niveles de encabezado apropiados (##, ###, ####, etc.).
             - Una introducción que presente el tema general y los puntos principales que se cubrirán.
+            - Subtítulos para cada sección principal, utilizando los niveles de encabezado apropiados (##, ###, ####, etc.).
             - Secciones de contenido principal que desarrollen cada tema en detalle.
             - Una conclusión que resuma los puntos clave y cierre el documento.
 
         ## Contenido
             - Explica cada idea y concepto con el máximo detalle posible, aprovechando toda la información disponible en las notas.
-            - Incluye todos los ejemplos, datos estadísticos, y citas textuales presentes en las notas, utilizando el formato apropiado (comillas para citas, listas para enumeraciones, etc.).
-            - Incorpora cualquier definición, terminología especializada o conceptos técnicos mencionados en las notas, proporcionando explicaciones claras.
             - Presenta cualquier argumento, contraargumento, o perspectivas múltiples que se hayan registrado en las notas.
             - Menciona cualquier limitación, advertencia o área de incertidumbre que se haya anotado.
+            - Incluye todos los ejemplos y datos estadísticos presentes en las notas, utilizando el formato apropiado (listas para enumeraciones, etc.).
+            - Incorpora cualquier definición, terminología especializada o conceptos técnicos mencionados en las notas, proporcionando explicaciones claras.
 
         ## Formato y estilo
             - Utiliza viñetas o listas numeradas para presentar series de puntos o pasos, mejorando la legibilidad.
@@ -188,8 +187,6 @@ def fn(url, callback):
             - El formato Markdown se ha aplicado correctamente y consistentemente.
             - El documento es coherente, bien estructurado y fácil de leer.
             - No hay repeticiones innecesarias de información.
-
-        6. Concluye el documento con un breve resumen que capture los puntos más importantes y proporcione una visión general del tema tratado.
 
         Recuerda: Tu objetivo es crear un documento exhaustivo y bien estructurado que capture toda la riqueza y detalle de las notas originales, presentándolo de una manera coherente y fácil de entender para el lector.
 
