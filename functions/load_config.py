@@ -13,4 +13,5 @@ def load_config():
             "ragModel": "gpt-3.5-turbo",
             "ragSearchType": "similarity",
             "ragSearchK": 3,
+            "ragChunkSize": 400
         }
