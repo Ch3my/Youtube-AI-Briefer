@@ -34,7 +34,7 @@ def show_context_fn(context):
     text_area.config(state=tk.DISABLED)
 
 
-def display_result(transcript, result, content_type="markdown"):
+def display_result(transcript, result, notes, content_type="markdown"):
     response_queue = multiprocessing.Queue()
     result_window = tk.Toplevel(MAIN_WINDOW)
     result_window.title("Result")
@@ -64,7 +64,7 @@ def display_result(transcript, result, content_type="markdown"):
 
     copy_transcript = tk.Button(
         button_frame,
-        text="Copiar transcript",
+        text="📋 Transcript",
         command=lambda: copy_to_clipboard(transcript),
         bg=BTN_BG_COLOR,
         fg=FG_COLOR,
@@ -74,7 +74,7 @@ def display_result(transcript, result, content_type="markdown"):
 
     copy_markdown = tk.Button(
         button_frame,
-        text="Copiar Markdown",
+        text="📋 Markdown",
         command=lambda: copy_to_clipboard(result),
         bg=BTN_BG_COLOR,
         fg=FG_COLOR,
@@ -84,13 +84,23 @@ def display_result(transcript, result, content_type="markdown"):
 
     copy_html = tk.Button(
         button_frame,
-        text="Copiar HTML",
+        text="📋 HTML",
         command=lambda: copy_to_clipboard(styled_html_content),
         bg=BTN_BG_COLOR,
         fg=FG_COLOR,
         font=("Consolas", 14),
     )
     copy_html.pack(side=tk.LEFT, padx=(5, 0))
+
+    copy_notes = tk.Button(
+        button_frame,
+        text="📋 Notas",
+        command=lambda: copy_to_clipboard(notes),
+        bg=BTN_BG_COLOR,
+        fg=FG_COLOR,
+        font=("Consolas", 14),
+    )
+    copy_notes.pack(side=tk.LEFT, padx=(5, 0))
 
     if content_type == "markdown":
         html_content = markdown2.markdown(result, extras=["break-on-newline"])

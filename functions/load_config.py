@@ -7,10 +7,10 @@ def load_config():
             return json.load(f)
     except FileNotFoundError:
         return {
-            "resumeModel": "gpt-3.5-turbo",
-            "condensaModel": "gpt-3.5-turbo",
+            "resumeModel": "gpt-4o-mini",
+            "condensaModel": "gpt-4o-mini",
             "resumeChunkSize": 5000,
-            "ragModel": "gpt-3.5-turbo",
+            "ragModel": "gpt-4o-mini",
             "ragSearchType": "similarity",
             "ragSearchK": 3,
             "ragChunkSize": 400

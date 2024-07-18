@@ -11,7 +11,7 @@ class Globals:
         self.ENTRY_FG_COLOR = "#FFFFFF"
         self.FEEDBACK_MSG = ""
         self.CONFIG_FILE = "config.json"
-        self.AVAILABLE_MODELS = ["claude-3-haiku-20240307", "claude-3-5-sonnet-20240620", "gpt-3.5-turbo", "gpt-4o"]
+        self.AVAILABLE_MODELS = ["claude-3-haiku-20240307", "claude-3-5-sonnet-20240620", "gpt-4o-mini", "gpt-4o"]
 
     def get_feedback_msg(self):
         return self.FEEDBACK_MSG

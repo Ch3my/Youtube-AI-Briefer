@@ -70,47 +70,33 @@ def fn(url, callback):
     resume_template = """
         Instrucciones para la toma de notas detalladas:
 
-        1. Lee el texto proporcionado minuciosamente, asegurándote de comprender a fondo su contenido, contexto y estructura.
-
+        1. Lee el texto proporcionado minuciosamente, asegurándote de comprender a fondo su contenido.
+        
         2. Identifica y anota todas las ideas principales, conceptos clave, argumentos centrales y conclusiones importantes presentes en el texto.
+        
+        4. Para cada idea principal, escribe una prosa incluyendo (pero no te limites a): Explicacion detallada y Datos o estadísticas o cifras relevantes
 
-        3. Para cada idea principal, incluye:
-            - Explicaciones detalladas
-            - Ejemplos específicos mencionados
-            - Datos, estadísticas o cifras relevantes
-            - Citas textuales importantes (usar comillas y indicar la ubicación aproximada en el texto)
-
-        4. Respeta la estructura original del texto, incluyendo:
+        5. Respeta la estructura original del texto, incluyendo:
             - La progresión lógica de las ideas
             - Conexiones entre diferentes secciones o conceptos
             - Cualquier jerarquía o categorización presente
 
-        5. Anota cualquier terminología especializada, definiciones o conceptos técnicos introducidos en el texto, proporcionando explicaciones concisas.
+        6. Anota cualquier terminología especializada, definiciones o conceptos técnicos introducidos en el texto, proporcionando explicaciones concisas.
 
-        6. Identifica y registra:
+        7. Identifica y registra:
             - Cualquier pregunta planteada y sus respuestas
             - Problemas presentados y sus soluciones propuestas
             - Hipótesis formuladas y evidencias que las respaldan
 
-        7. Presta atención a matices, sutilezas o calificaciones que el autor hace sobre las ideas principales.
-
         8. Si el texto discute múltiples perspectivas o argumentos contrastantes, asegúrate de capturar todas ellas de manera equilibrada.
 
-        9. Registra cualquier limitación, advertencia o área de incertidumbre que el autor mencione sobre el tema tratado.
+        9. Mantén la objetividad en todo momento. No agregues interpretaciones personales, opiniones o información que no esté presente en el texto original.
 
-        10. Si se mencionan fuentes, referencias o estudios específicos, inclúyelos en tus notas.
+        10. Responde siempre en español, manteniendo la terminología original si está en otro idioma, pero proporcionando traducciones o explicaciones cuando sea necesario.
 
-        11. Mantén la objetividad en todo momento. No agregues interpretaciones personales, opiniones o información que no esté presente en el texto original.
+        11. Sé lo más exhaustivo y detallado posible en tus notas, sin omitir ningún aspecto significativo del texto.
 
-        12. Organiza tus notas de manera clara y estructurada, utilizando viñetas, numeración o subtítulos según sea apropiado para mejorar la legibilidad.
-
-        13. Al final de tus notas, incluye un breve resumen que capture la esencia general del texto en no más de 3-5 oraciones.
-
-        14. Responde siempre en español, manteniendo la terminología original si está en otro idioma, pero proporcionando traducciones o explicaciones cuando sea necesario.
-
-        15. Sé lo más exhaustivo y detallado posible en tus notas, sin omitir ningún aspecto significativo del texto.
-
-        Recuerda: Tu objetivo es crear un conjunto de notas que sean lo suficientemente detalladas y completas como para que alguien que las lea pueda obtener una comprensión profunda y exhaustiva del texto original sin necesidad de referirse a él directamente.
+        Recuerda. Tu objetivo es crear un conjunto de notas que sean lo suficientemente detalladas y completas como para que alguien que las lea pueda obtener una comprensión profunda y exhaustiva del texto original sin necesidad de referirse a él directamente.
         
         El Texto:
         {chunk}"""
@@ -119,7 +105,7 @@ def fn(url, callback):
         [
             (
                 "system",
-                "Eres un agente que se encarga de entregar un Estudio Detallado sobre el texto en español. Los conceptos deben presentarse en forma detallada incluyendo una explicacion de cada idea.",
+                "Eres un agente que se encarga de tomar notas detalladas sobre el texto en español. Los conceptos deben presentarse en forma detallada incluyendo una explicacion de cada idea.",
             ),
             ("user", resume_template),
         ]
@@ -147,16 +133,17 @@ def fn(url, callback):
 
     set_feedback_msg("Generando documento final")
 
+    notes_join = "\n\n".join(notes)
+
     condensa_prompt = """
-        1. Escribe como Nia, eres mi asistente, escribe como si me estuvieras entregando el informe en persona, no es necesario que te presentes ya nos conocemos.
+        1. Escribe como Nia, eres mi asistente, escribe como si me estuvieras entregando el informe en persona, no es necesario que te presentes ya nos conocemos. Tu trato debe ser cercano pero respetuoso.
         2. Redacta un documento coherente y exhaustivo en español, utilizando formato Markdown, que incorpore toda la información de las notas. El documento debe incluir:
 
         ## Al escribir utiliza esta estructura, si el texto no incluye informacion sobre alguna seccion simplemente no la escribas 
-            - Un título principal que refleje el tema general.
-            - Una introducción que presente el tema general y los puntos principales que se cubrirán.
+            - Un breve título principal que refleje el tema general.
+            - Un abstracto que presente el tema general y los puntos principales que se cubrirán.
             - Subtítulos para cada sección principal, utilizando los niveles de encabezado apropiados (##, ###, ####, etc.).
             - Secciones de contenido principal que desarrollen cada tema en detalle.
-            - Una conclusión que resuma los puntos clave y cierre el documento.
 
         ## Contenido
             - Explica cada idea y concepto con el máximo detalle posible, aprovechando toda la información disponible en las notas.
@@ -164,17 +151,6 @@ def fn(url, callback):
             - Menciona cualquier limitación, advertencia o área de incertidumbre que se haya anotado.
             - Incluye todos los ejemplos y datos estadísticos presentes en las notas, utilizando el formato apropiado (listas para enumeraciones, etc.).
             - Incorpora cualquier definición, terminología especializada o conceptos técnicos mencionados en las notas, proporcionando explicaciones claras.
-
-        ## Formato y estilo
-            - Utiliza viñetas o listas numeradas para presentar series de puntos o pasos, mejorando la legibilidad.
-            - Emplea **negrita** para resaltar conceptos clave o términos importantes.
-            - Usa *cursiva* para énfasis o para términos en idiomas extranjeros.
-            - Incluye citas en bloque para pasajes extensos citados textualmente, utilizando el formato Markdown apropiado (>).
-            - Si las notas incluyen información que podría presentarse en tablas, créalas utilizando la sintaxis de tablas de Markdown.
-
-        ## Enlaces y referencias
-            - Si las notas mencionan fuentes específicas, estudios o referencias, inclúyelas al final del documento en una sección de "Referencias" utilizando un formato de citación consistente.
-            - Cuando sea apropiado, crea enlaces internos dentro del documento para conectar secciones relacionadas.
 
         3. Asegúrate de que el documento fluya lógicamente de un tema a otro, proporcionando transiciones suaves entre secciones.
 
@@ -206,7 +182,7 @@ def fn(url, callback):
     condensa_chain = condensa_template | condensa_model | StrOutputParser()
 
     try:
-        final_document = condensa_chain.invoke({"notes": "\n\n".join(notes)})
+        final_document = condensa_chain.invoke({"notes": notes_join})
     except Exception as e:
         callback("Error al conectarse con AI")
         log_message(f"Error durante el procesamiento Documento Final: {e}")
@@ -214,4 +190,4 @@ def fn(url, callback):
 
     # Display result in the main thread
     callback("Procesamiento completado")
-    MAIN_WINDOW.after(0, display_result, transcript, final_document)
+    MAIN_WINDOW.after(0, display_result, transcript, final_document, notes_join)
