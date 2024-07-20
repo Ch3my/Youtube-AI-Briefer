@@ -61,11 +61,11 @@ NOTA. si error al instalar langchain-huggingface quiza se deba a esto: https://l
 
 Crear entorno
 
-`python -m venv .env`
+`python -m venv .venv`
 
 Activar entorno
 
-`.env\Script\Activate`
+`.venv\Script\Activate`
 
 Luego instalar paquetes dentro del entorno
 

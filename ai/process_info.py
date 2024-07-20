@@ -72,29 +72,22 @@ def fn(url, callback):
 
         1. Lee el texto proporcionado minuciosamente, asegurándote de comprender a fondo su contenido.
         
-        2. Identifica y anota todas las ideas principales, conceptos clave, argumentos centrales y conclusiones importantes presentes en el texto.
+        2. Identifica y anota todas las ideas principales, conceptos clave, argumentos centrales importantes presentes en el texto.
         
-        4. Para cada idea principal, escribe una prosa incluyendo (pero no te limites a): Explicacion detallada y Datos o estadísticas o cifras relevantes
+        3. Explica cada idea principal en fomato prosa, utilizando todos los datos disponibles
 
-        5. Respeta la estructura original del texto, incluyendo:
+        4. Respeta la estructura original del texto, incluyendo:
             - La progresión lógica de las ideas
             - Conexiones entre diferentes secciones o conceptos
             - Cualquier jerarquía o categorización presente
 
-        6. Anota cualquier terminología especializada, definiciones o conceptos técnicos introducidos en el texto, proporcionando explicaciones concisas.
+        5. Si el texto discute múltiples perspectivas o argumentos contrastantes, asegúrate de capturar todas ellas de manera equilibrada.
 
-        7. Identifica y registra:
-            - Cualquier pregunta planteada y sus respuestas
-            - Problemas presentados y sus soluciones propuestas
-            - Hipótesis formuladas y evidencias que las respaldan
+        6. Mantén la objetividad en todo momento. No agregues interpretaciones personales, opiniones o información que no esté presente en el texto original.
 
-        8. Si el texto discute múltiples perspectivas o argumentos contrastantes, asegúrate de capturar todas ellas de manera equilibrada.
+        7. Responde siempre en español, manteniendo la terminología original si está en otro idioma, pero proporcionando traducciones o explicaciones cuando sea necesario.
 
-        9. Mantén la objetividad en todo momento. No agregues interpretaciones personales, opiniones o información que no esté presente en el texto original.
-
-        10. Responde siempre en español, manteniendo la terminología original si está en otro idioma, pero proporcionando traducciones o explicaciones cuando sea necesario.
-
-        11. Sé lo más exhaustivo y detallado posible en tus notas, sin omitir ningún aspecto significativo del texto.
+        8. Sé lo más exhaustivo y detallado posible en tus notas, sin omitir ningún aspecto significativo del texto.
 
         Recuerda. Tu objetivo es crear un conjunto de notas que sean lo suficientemente detalladas y completas como para que alguien que las lea pueda obtener una comprensión profunda y exhaustiva del texto original sin necesidad de referirse a él directamente.
         
@@ -147,10 +140,7 @@ def fn(url, callback):
 
         ## Contenido
             - Explica cada idea y concepto con el máximo detalle posible, aprovechando toda la información disponible en las notas.
-            - Presenta cualquier argumento, contraargumento, o perspectivas múltiples que se hayan registrado en las notas.
-            - Menciona cualquier limitación, advertencia o área de incertidumbre que se haya anotado.
             - Incluye todos los ejemplos y datos estadísticos presentes en las notas, utilizando el formato apropiado (listas para enumeraciones, etc.).
-            - Incorpora cualquier definición, terminología especializada o conceptos técnicos mencionados en las notas, proporcionando explicaciones claras.
 
         3. Asegúrate de que el documento fluya lógicamente de un tema a otro, proporcionando transiciones suaves entre secciones.
 
