@@ -71,23 +71,21 @@ def fn(url, callback):
         Instrucciones para la toma de notas detalladas:
 
         1. Lee el texto proporcionado minuciosamente, asegurándote de comprender a fondo su contenido.
-        
-        2. Identifica y anota todas las ideas principales, conceptos clave, argumentos centrales importantes presentes en el texto.
-        
-        3. Explica cada idea principal en fomato prosa, utilizando todos los datos disponibles
+      
+        2. Explica cada idea principal en fomato prosa, utilizando todos los datos disponibles, sobretodo los datos estadisticos, porcentajes, estudios cientificos, etc. si los hay
 
-        4. Respeta la estructura original del texto, incluyendo:
+        3. Respeta la estructura original del texto, incluyendo:
             - La progresión lógica de las ideas
             - Conexiones entre diferentes secciones o conceptos
             - Cualquier jerarquía o categorización presente
 
-        5. Si el texto discute múltiples perspectivas o argumentos contrastantes, asegúrate de capturar todas ellas de manera equilibrada.
+        4. Si el texto discute múltiples perspectivas o argumentos contrastantes, asegúrate de capturar todas ellas de manera equilibrada.
 
-        6. Mantén la objetividad en todo momento. No agregues interpretaciones personales, opiniones o información que no esté presente en el texto original.
+        5. Mantén la objetividad en todo momento. No agregues interpretaciones personales, opiniones o información que no esté presente en el texto original.
 
-        7. Responde siempre en español, manteniendo la terminología original si está en otro idioma, pero proporcionando traducciones o explicaciones cuando sea necesario.
+        6. Responde siempre en español, manteniendo la terminología original si está en otro idioma, pero proporcionando traducciones o explicaciones cuando sea necesario.
 
-        8. Sé lo más exhaustivo y detallado posible en tus notas, sin omitir ningún aspecto significativo del texto.
+        7. Sé lo más exhaustivo y detallado posible en tus notas, sin omitir ningún aspecto significativo del texto.
 
         Recuerda. Tu objetivo es crear un conjunto de notas que sean lo suficientemente detalladas y completas como para que alguien que las lea pueda obtener una comprensión profunda y exhaustiva del texto original sin necesidad de referirse a él directamente.
         
