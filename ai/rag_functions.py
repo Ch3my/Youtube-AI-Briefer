@@ -68,17 +68,28 @@ def build_rag(transcript):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=config["ragChunkSize"], chunk_overlap=0
     )
-    docs = [Document(page_content=x) for x in text_splitter.split_text(transcript)]
+    splitted_text = text_splitter.split_text(transcript)
+
+    # docs = [Document(page_content=x) for x in splitted_text]
     embeddings = get_embeddings()
 
     # load it into Chroma. Solo en memoria, porque reemplazaremos frecuentemente
-    _db = Chroma.from_documents(docs, embeddings)
+    # TODO. Ver si hay algun metadato importante, aunque se usa solo en get_retriever() (no Hybrid)
+    _db = Chroma.from_texts(texts=splitted_text, embedding=embeddings)
     chat_id = generate_random_string(10)
 
     # Prepara los retriever para Hybrid-Search
-    bm25_retriever = BM25Retriever.from_documents(docs)
+    # Metadata tiene que ser del mismo largo que los chunks
+    bm25_retriever = BM25Retriever.from_texts(
+                                        texts=splitted_text, 
+                                        metadatas=[{"source": "BM25Retriever"}] * len(splitted_text)
+    )
     bm25_retriever.k = config["ragSearchK"]
-    faiss_vectorstore = FAISS.from_documents(docs, embeddings)
+    faiss_vectorstore = FAISS.from_texts(
+        texts=splitted_text, 
+        embedding=embeddings, 
+        metadatas=[{"source": "FAISS"}] * len(splitted_text)
+    )
 
     return _db
 
@@ -117,6 +128,7 @@ def get_hybrid_retriever():
 
 
 def query_rag(query, verbose=False):
+    # set_debug(True)
     global chat_id
     # retriever = get_retriever()
     retriever = get_hybrid_retriever()
@@ -172,7 +184,9 @@ def query_rag(query, verbose=False):
             ("human", "{input}"),
         ]
     )
-
+    # TODO. Añadir un reranker o compresor
+    # https://python.langchain.com/v0.2/docs/integrations/retrievers/flashrank-reranker/ 
+    # https://python.langchain.com/v0.1/docs/modules/data_connection/retrievers/contextual_compression/
     history_aware_retriever = create_history_aware_retriever(
         rag_llm, retriever, contextualize_q_prompt
     )

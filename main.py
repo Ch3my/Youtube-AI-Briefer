@@ -47,6 +47,7 @@ def on_enter_key(event):
 # Create the main window
 MAIN_WINDOW.title("Youtube AI Briefer")
 MAIN_WINDOW.geometry("450x250")  # Set the size of the window
+MAIN_WINDOW.iconbitmap('assets/favicon.ico')
 
 # Configure the main window with dark theme
 MAIN_WINDOW.configure(bg=BG_COLOR, padx=20, pady=20)

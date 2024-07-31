@@ -36,6 +36,7 @@ def config_screen():
     # mythreads = threading.enumerate()
     
     config_window = tk.Toplevel(MAIN_WINDOW)
+    config_window.iconbitmap('assets/favicon.ico')
     config_window.title("Config")
     config_window.geometry("600x650")  # Increased height to accommodate new input
     config_window.configure(bg=BG_COLOR)

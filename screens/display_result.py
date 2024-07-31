@@ -10,33 +10,51 @@ import pyperclip
 from tkinterweb import HtmlFrame
 
 def show_context_fn(context):
-    window_content = ""
     context_window = tk.Toplevel(MAIN_WINDOW)
+    context_window.iconbitmap('assets/favicon.ico')
     context_window.title("Context")
-    context_window.geometry("600x600")  # Increased height to accommodate new inputs
-    context_window.configure(bg=BG_COLOR, padx=20, pady=20)
+    context_window.geometry("600x600")
+    context_window.configure(bg=BG_COLOR)
 
-    text_area = scrolledtext.ScrolledText(
-        context_window,
+    # Create a frame to hold the Text widget and Scrollbar
+    frame = tk.Frame(context_window, bg=BG_COLOR)
+    frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+    # Create a Scrollbar widget first
+    scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+    # Create a Text widget
+    text_area = tk.Text(
+        frame,
         wrap=tk.WORD,
         font=("Consolas", 14),
         bg=BG_COLOR,
         fg="#CCC",
         insertbackground=BG_COLOR,
+        bd=0,
+        yscrollcommand=scrollbar.set  # Link scrollbar here
     )
-    text_area.pack(expand=True, fill=tk.BOTH)
+    text_area.pack(side=tk.LEFT, expand=True, fill=tk.BOTH, padx=(0, 30))  # Add padding here
+
+    # Configure the scrollbar to work with the text area
+    scrollbar.config(command=text_area.yview)
+
+    # Configure the ability to add font in Bold
+    text_area.tag_config('bold', font=('Consolas', 14, 'bold'))
 
     for doc in context:
-        window_content += doc.page_content + "\n\n"
-        window_content += "==============================" + "\n\n"
+        # Insert bold text with the 'bold' tag
+        text_area.insert(tk.END, f"Retriever: {doc.metadata['source']}\n", 'bold')
+        text_area.insert(tk.END, f"{doc.page_content}\n\n")
 
-    text_area.insert(tk.END, window_content)
     text_area.config(state=tk.DISABLED)
 
 
 def display_result(transcript, result, notes, content_type="markdown"):
     response_queue = multiprocessing.Queue()
     result_window = tk.Toplevel(MAIN_WINDOW)
+    result_window.iconbitmap('assets/favicon.ico')
     result_window.title("Result")
     result_window.configure(bg=BG_COLOR)
     result_window.geometry("1200x768")
