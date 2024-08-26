@@ -50,7 +50,7 @@ Se intento usar Poetry (https://python-poetry.org/) para manejar las dependencia
 Instalar dependencias:
 
 ``` 
-pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic langchain_chroma langchain-huggingface rank_bm25 faiss-cpu
+pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic langchain_chroma langchain-huggingface rank_bm25 faiss-cpu pygame 
 ```
 
 Con esto ya se puede desarrollar en VS Code e iniciar el programa haciendo correr `main.py`

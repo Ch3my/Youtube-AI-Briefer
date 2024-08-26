@@ -19,6 +19,7 @@ from langchain_core.output_parsers import StrOutputParser
 from functions.logger import log_message
 from globals import MAIN_WINDOW, set_feedback_msg
 from screens.display_result import display_result
+import pygame
 
 def fn(url, callback):
     config = load_config()
@@ -178,4 +179,8 @@ def fn(url, callback):
 
     # Display result in the main thread
     callback("Procesamiento completado")
+    # Reproduce Sonido de notificacion
+    pygame.mixer.init()
+    pygame.mixer.music.load("assets/finish-sound.mp3")
+    pygame.mixer.music.play()
     MAIN_WINDOW.after(0, display_result, transcript, final_document, notes_join)
