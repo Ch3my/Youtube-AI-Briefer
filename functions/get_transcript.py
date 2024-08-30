@@ -1,5 +1,5 @@
 from functions.get_video_id import get_video_id
-from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
 from globals import set_feedback_msg
 
 def get_transcript(url):
@@ -12,11 +12,15 @@ def get_transcript(url):
     chunks = []
     try:
         # Your code that might raise the TranscriptsDisabled exception
-        chunks = YouTubeTranscriptApi.get_transcript(YT_VIDEO_ID, languages=["es", "en"])
+        chunks = YouTubeTranscriptApi.get_transcript(YT_VIDEO_ID, languages=["es", "en", "en-GB"])
     except TranscriptsDisabled as e:
         print("Caught TranscriptsDisabled exception:", e)
         set_feedback_msg("La transcripcion esta desactivada para este video :(")
         return None
+    except NoTranscriptFound as e:
+        print("Caught NoTranscriptFound exception:", e)
+        set_feedback_msg("No existe un transcript en los idiomas aceptados :(")
+
 
     transcript = []
     for i in chunks:
