@@ -9,9 +9,10 @@ def load_config():
         return {
             "resumeModel": "gpt-4o-mini",
             "condensaModel": "gpt-4o-mini",
-            "resumeChunkSize": 5000,
+            "resumeChunkSize": 10000,
             "ragModel": "gpt-4o-mini",
-            "ragSearchType": "similarity",
-            "ragSearchK": 3,
-            "ragChunkSize": 400
+            "ragSearchType": "mmr",
+            "ragSearchK": 2,
+            "ragChunkSize": 1000,
+            "useWhisper": "no",
         }

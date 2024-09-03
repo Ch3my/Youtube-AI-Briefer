@@ -30,6 +30,7 @@ def config_screen():
         config["ragSearchType"] = rag_search_type_var.get()
         config["ragSearchK"] = int(rag_search_k_var.get())
         config["ragChunkSize"] = int(rag_chunk_size_var.get())  # New line
+        config["useWhisper"] = use_whisper_var.get()  # New line
         save_config(config)
         config_window.destroy()
     # For Debug
@@ -38,7 +39,7 @@ def config_screen():
     config_window = tk.Toplevel(MAIN_WINDOW)
     config_window.iconbitmap('assets/favicon.ico')
     config_window.title("Config")
-    config_window.geometry("600x650")  # Increased height to accommodate new input
+    config_window.geometry("600x700")  # Increased height to accommodate new input
     config_window.configure(bg=BG_COLOR)
 
     content_frame = tk.Frame(config_window, bg=BG_COLOR, padx=20, pady=20)
@@ -133,6 +134,14 @@ def config_screen():
     rag_chunk_size_entry = ttk.Entry(content_frame, textvariable=rag_chunk_size_var, font=("Consolas", 14))
     rag_chunk_size_entry.grid(row=9, column=1, sticky="ew", pady=5)
 
+    use_whisper_label = tk.Label(content_frame, text="Use Whisper:", font=("Consolas", 14), bg=BG_COLOR, fg=FG_COLOR)
+    use_whisper_label.grid(row=10, column=0, sticky="w", padx=(0, 10), pady=5)
+
+    use_whisper_options = ["si", "no"]
+    use_whisper_var = tk.StringVar(value=config.get("useWhisper", "no"))
+    use_whisper_combo = ttk.Combobox(content_frame, textvariable=use_whisper_var, values=use_whisper_options, font=("Consolas", 14), state="readonly")
+    use_whisper_combo.grid(row=10, column=1, sticky="ew", pady=5)
+
     # Save Button
     save_button = tk.Button(
         content_frame,
@@ -143,7 +152,7 @@ def config_screen():
         font=("Consolas", 14),
         bd=0
     )
-    save_button.grid(row=10, column=0, columnspan=2, pady=20, sticky="we")
+    save_button.grid(row=11, column=0, columnspan=2, pady=20, sticky="we")
 
     # Configure grid weights
     content_frame.columnconfigure(1, weight=1)

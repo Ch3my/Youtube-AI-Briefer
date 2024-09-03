@@ -26,6 +26,15 @@ Asi solo le entregamos la informacion resumida a GPT-4 y este ejecuta solo el ul
 
 Mezclar los modelos reduce costo porque la cantidad de token que procesa GPT-4 es bastante menor al tener la informacion resumida ya. Estamos hablando de un 70% menos de informacion que procesa GPT-4 por resumirla antes
 
+En caso de no poder obtener la transcripcion de manera gratuita, el sistema intenta utilizar whisper para obtener la transcripcion, esto lo realiza con previa confirmacion del usuario para evitar incurrir en costos ya que Whisper podria salir caro si es muy largo el video
+
+## Whisper
+Para poder utilizar Whisper debes tener una API de OpenAI habilitado y tener ffmpeg instalado en la maquina. Para usar whisper no es necesario ffmpeg pero es necesario para cortar el audio si es necesario antes de pasarlo a la API de Whisper
+
+- Download the latest version of FFmpeg from the official website.
+- Extract the contents to a folder (e.g., C:\ffmpeg).
+- Add the bin directory of the extracted folder to your system’s PATH
+
 ### RAG, chat con la transcripcion ###
 Al obtener el transcript tambien Genera un RAG del texto, permitiendo al usuario hacer preguntas sobre el video y la AI le responde utilizando el contexto, esto es util en el caso de que quieras mas informacion sobre un tema en el resumen.
 
@@ -50,7 +59,7 @@ Se intento usar Poetry (https://python-poetry.org/) para manejar las dependencia
 Instalar dependencias:
 
 ``` 
-pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic langchain_chroma langchain-huggingface rank_bm25 faiss-cpu pygame 
+pip install pyinstaller youtube_transcript_api markdown2 pyperclip tkinterweb langchain-openai langchain langchain-core langchain-anthropic langchain_chroma langchain-huggingface rank_bm25 faiss-cpu pygame yt-dlp
 ```
 
 Con esto ya se puede desarrollar en VS Code e iniciar el programa haciendo correr `main.py`
