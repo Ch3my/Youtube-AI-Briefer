@@ -97,6 +97,7 @@ def build_rag(transcript):
     # TODO. Ver si hay algun metadato importante, aunque se usa solo en get_retriever() (no Hybrid)
     # nota. se puede implementar busqueda por metadata a traves de chroma pero soporte solo datos
     # simples string number, etc, no podemos filtrar por arrays
+    # https://github.com/langchain-ai/langchain/issues/7824
     # _db = Chroma.from_texts(texts=splitted_text, embedding=embeddings)
     chat_id = generate_random_string(10)
 
