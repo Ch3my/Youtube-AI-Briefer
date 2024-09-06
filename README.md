@@ -28,7 +28,7 @@ Mezclar los modelos reduce costo porque la cantidad de token que procesa GPT-4 e
 
 En caso de no poder obtener la transcripcion de manera gratuita, el sistema intenta utilizar whisper para obtener la transcripcion, esto lo realiza con previa confirmacion del usuario para evitar incurrir en costos ya que Whisper podria salir caro si es muy largo el video
 
-## Whisper
+### Whisper
 Para poder utilizar Whisper debes tener una API de OpenAI habilitado y tener ffmpeg instalado en la maquina. Para usar whisper no es necesario ffmpeg pero es necesario para cortar el audio si es necesario antes de pasarlo a la API de Whisper
 
 - Download the latest version of FFmpeg from the official website.
@@ -43,6 +43,11 @@ Al hacer preguntas al RAG tambien hay un boton que te muestra los extractos del 
 Para crear el RAG estamos usando embeddings de manera local, por lo tanto no incurre en gastos, pero depende de la maquina local. Usualmente toma unos 3 segundos de procesamiento para crearlo.
 
 Tambien se configuro un `Hybrid-Search` que utiliza busqueda semantica como de palabras claves, que segun las pruebas mejora el contexto un poco (10%), segun las pruebas mezclar el hybrid-search con `MMR` mejora la respuesta final un poco mas (25%)
+
+#### Filtros por TAGS ####
+Por configuracion se puede habilitar los filtros por Tags, si esta habilitado, luego de generar los chunks, por cada chunk genera una lista de tags que incluye dentro de la metada del chunk. 
+
+Al buscar en el la base de datos, toma en cuenta estos tags, primero genera tags relevantes basado en la pregunta del usuario y compara los tags de los chunk con los tags generados por el usuario y filtra aquellos que contienen los tags. Si no coincide ningun tag solo devuelve todo lo que encontro
 
 ## Calidad entre una sola tarea (1 paso) y preprocesar (2 pasos) ##
 

@@ -13,6 +13,7 @@ def load_config():
             "ragModel": "gpt-4o-mini",
             "ragSearchType": "mmr",
             "ragSearchK": 2,
-            "ragChunkSize": 1000,
+            "ragChunkSize": 1500,
             "useWhisper": "no",
+            "useTags": "no",
         }

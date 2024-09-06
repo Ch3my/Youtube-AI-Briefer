@@ -31,6 +31,7 @@ def config_screen():
         config["ragSearchK"] = int(rag_search_k_var.get())
         config["ragChunkSize"] = int(rag_chunk_size_var.get())  # New line
         config["useWhisper"] = use_whisper_var.get()  # New line
+        config["useTags"] = use_tags_var.get()
         save_config(config)
         config_window.destroy()
     # For Debug
@@ -142,6 +143,14 @@ def config_screen():
     use_whisper_combo = ttk.Combobox(content_frame, textvariable=use_whisper_var, values=use_whisper_options, font=("Consolas", 14), state="readonly")
     use_whisper_combo.grid(row=10, column=1, sticky="ew", pady=5)
 
+    use_tags_label = tk.Label(content_frame, text="Use Tags:", font=("Consolas", 14), bg=BG_COLOR, fg=FG_COLOR)
+    use_tags_label.grid(row=11, column=0, sticky="w", padx=(0, 10), pady=5)
+
+    use_tags_options = ["si", "no"]
+    use_tags_var = tk.StringVar(value=config.get("useTags", "no"))
+    use_tags_combo = ttk.Combobox(content_frame, textvariable=use_tags_var, values=use_tags_options, font=("Consolas", 14), state="readonly")
+    use_tags_combo.grid(row=11, column=1, sticky="ew", pady=5)
+
     # Save Button
     save_button = tk.Button(
         content_frame,
@@ -152,7 +161,7 @@ def config_screen():
         font=("Consolas", 14),
         bd=0
     )
-    save_button.grid(row=11, column=0, columnspan=2, pady=20, sticky="we")
+    save_button.grid(row=12, column=0, columnspan=2, pady=20, sticky="we")
 
     # Configure grid weights
     content_frame.columnconfigure(1, weight=1)
