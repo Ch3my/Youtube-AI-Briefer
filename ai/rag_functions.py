@@ -88,17 +88,21 @@ def build_rag(transcript):
 
     # Config if create tags or not, build metadatas with [] if not
     uuids = [str(uuid4()) for _ in range(len(splitted_text))]
-    metadatas = [
-        {
-            "tags": tags,
-            "id": uuid,
-            "tag_1": tags[0] if len(tags) > 0 else "",
-            "tag_2": tags[1] if len(tags) > 1 else "",
-            "tag_3": tags[2] if len(tags) > 2 else "",
-        }
-        for chunk, uuid in zip(splitted_text, uuids)
-        if (tags := generate_tags("search", chunk) if config["useTags"] == "si" else [])
-    ]
+
+    metadatas = []  # Initialize an empty list for metadata
+    for chunk, uuid in zip(splitted_text, uuids):
+        metadata = {"id": uuid}  # Start with the 'id' field for each entry
+
+        if config["useTags"] == "si":
+            # Generate tags and add them to the metadata
+            tags = generate_tags("search", chunk)
+            metadata["tags"] = tags
+            metadata["tag_1"] = tags[0] if len(tags) > 0 else ""
+            metadata["tag_2"] = tags[1] if len(tags) > 1 else ""
+            metadata["tag_3"] = tags[2] if len(tags) > 2 else ""
+        
+        # Append the built metadata dictionary to the metadatas list
+        metadatas.append(metadata)
 
     # load it into Chroma. Solo en memoria, porque reemplazaremos frecuentemente
     # TODO. Ver si hay algun metadato importante, aunque se usa solo en get_retriever() (no Hybrid)
@@ -165,7 +169,11 @@ def get_hybrid_retriever():
     ensemble_retriever = EnsembleRetriever(
         retrievers=[bm25_retriever, faiss_retriever], weights=[0.5, 0.5]
     )
-    return ensemble_retriever
+    compressor = FlashrankRerank(top_n=config["ragSearchK"])
+    compression_retriever = ContextualCompressionRetriever(
+        base_compressor=compressor, base_retriever=ensemble_retriever
+    )
+    return compression_retriever
 
 
 def get_hybrid_retriever_with_tags():

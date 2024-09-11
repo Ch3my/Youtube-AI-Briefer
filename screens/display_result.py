@@ -47,7 +47,8 @@ def show_context_fn(context):
         # Insert bold text with the 'bold' tag
         text_area.insert(tk.END, f"Retriever: {doc.metadata['source']}\n", 'bold')
         tags = doc.metadata.get('tags', [])
-        text_area.insert(tk.END, f"Tags: {', '.join(tags)}\n\n")
+        if tags:  # Only insert tags if the list is not empty
+            text_area.insert(tk.END, f"Tags: {', '.join(tags)}\n\n")
         text_area.insert(tk.END, f"{doc.page_content}\n\n")
 
     text_area.config(state=tk.DISABLED)
