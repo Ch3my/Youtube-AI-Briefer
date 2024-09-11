@@ -24,7 +24,7 @@ def generate_tags(target="search", text=""):
         return
 
     prompt_template = None
-    system_prompt = "Tu tarea es procesar el texto que los usuarios te proporcionen y extraer las keywords más relevantes, ***las keywords debes entregarlas separadas por coma***. Estas keywords deben ser seleccionadas con el objetivo de facilitar la búsqueda de información en bases de datos o sistemas de información. Debes asegurarte de identificar las palabras clave que mejor representen el núcleo de la pregunta, enfocándote en los términos que son fundamentales para entender el contexto y los conceptos clave. Evita palabras irrelevantes o demasiado generales, y prioriza los términos más específicos y útiles para la búsqueda."
+    system_prompt = "Tu tarea es procesar el texto que los usuarios te proporcionen y extraer las keywords más relevantes, ***las keywords debes entregarlas separadas por coma***. Estas keywords deben ser seleccionadas con el objetivo de facilitar la búsqueda de información en bases de datos o sistemas de información. Debes asegurarte de identificar las palabras clave que mejor representen el núcleo de la pregunta, enfocándote en los términos que son fundamentales para entender el contexto y los conceptos clave. Evita palabras irrelevantes o demasiado generales, y prioriza los términos más específicos y útiles para la búsqueda. Entrega las keywords siempre en Ingles"
     
     if target == "search":
         base_prompt = """

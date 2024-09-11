@@ -26,7 +26,9 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.callbacks import CallbackManagerForRetrieverRun
 from typing import List
 from langchain.chains.query_constructor.base import AttributeInfo
-from langchain.retrievers.self_query.base import SelfQueryRetriever
+from langchain_community.vectorstores.utils import filter_complex_metadata
+from langchain.retrievers.document_compressors import FlashrankRerank
+from langchain.retrievers import ContextualCompressionRetriever
 
 # NOTE. Pseudo-Singleton, not private constructor
 
@@ -47,6 +49,7 @@ metadata_field_info = [
         type="list",
     )
 ]
+
 
 def generate_random_string(length):
     letters_and_digits = string.ascii_letters + string.digits
@@ -87,10 +90,14 @@ def build_rag(transcript):
     uuids = [str(uuid4()) for _ in range(len(splitted_text))]
     metadatas = [
         {
-            "tags": generate_tags("search", chunk) if config["useTags"] == "si" else [],
-            "id": uuid
+            "tags": tags,
+            "id": uuid,
+            "tag_1": tags[0] if len(tags) > 0 else "",
+            "tag_2": tags[1] if len(tags) > 1 else "",
+            "tag_3": tags[2] if len(tags) > 2 else "",
         }
         for chunk, uuid in zip(splitted_text, uuids)
+        if (tags := generate_tags("search", chunk) if config["useTags"] == "si" else [])
     ]
 
     # load it into Chroma. Solo en memoria, porque reemplazaremos frecuentemente
@@ -99,6 +106,15 @@ def build_rag(transcript):
     # simples string number, etc, no podemos filtrar por arrays
     # https://github.com/langchain-ai/langchain/issues/7824
     # _db = Chroma.from_texts(texts=splitted_text, embedding=embeddings)
+
+    chromadb_retriever_metadatas = [
+        {"source": "ChromaDB", **meta} for meta in metadatas
+    ]  # Combine with existing metadata
+    docs = [
+        Document(page_content=chunk, metadata=metadata)
+        for chunk, metadata in zip(splitted_text, chromadb_retriever_metadatas)
+    ]
+    _db = Chroma.from_documents(filter_complex_metadata(docs), embeddings)
     chat_id = generate_random_string(10)
 
     # Prepara los retriever para Hybrid-Search
@@ -107,7 +123,7 @@ def build_rag(transcript):
         {"source": "BM25Retriever", **meta} for meta in metadatas
     ]  # Combine with existing metadata
     bm25_retriever = BM25Retriever.from_texts(
-        texts=splitted_text, metadatas=bm25_retriever_metadatas, ids=uuids 
+        texts=splitted_text, metadatas=bm25_retriever_metadatas, ids=uuids
     )
     bm25_retriever.k = config["ragSearchK"]
 
@@ -171,30 +187,54 @@ def get_hybrid_retriever_with_tags():
             faiss_results = faiss_vectorstore.similarity_search(
                 query, k=config["ragSearchK"]
             )
-           
+
+            # search by keywords "tags" in chroma
+            db = get_db()
+            keyword_results = db.similarity_search(
+                query,
+                filter={
+                    "$or": [
+                        {
+                            "tag_1": {"$in": query_tags},
+                        },
+                        {"tag_2": {"$in": query_tags}},
+                        {"tag_3": {"$in": query_tags}},
+                    ]
+                },
+            )
             # Combine results
-            all_results = bm25_results + faiss_results
+            all_results = bm25_results + faiss_results + keyword_results
 
             # Deduplicate results based on a unique identifier
             seen_ids = set()
             unique_results = []
             for doc in all_results:
-                if doc.metadata["id"] not in seen_ids:  # Replace `id` with the appropriate unique attribute
+                if (
+                    doc.metadata["id"] not in seen_ids
+                ):  # Replace `id` with the appropriate unique attribute
                     seen_ids.add(doc.metadata["id"])
                     unique_results.append(doc)
 
             # Filter results based on tag matching
             # como buscamos many-to-many, la DB no puede hacer esta pega la hacemos nosotros
-            filtered_results = [
-                doc
-                for doc in unique_results
-                if any(tag in doc.metadata.get("tags", []) for tag in query_tags)
-            ]
+            # filtered_results = [
+            #     doc
+            #     for doc in unique_results
+            #     if any(tag in doc.metadata.get("tags", []) for tag in query_tags)
+            # ]
 
             # If no documents match the tags, return all results
-            return filtered_results if filtered_results else unique_results
+            # return filtered_results if filtered_results else unique_results
+            return unique_results
 
-    return CustomHybridRetriever()
+    # Rerank and return n documents, base retriever have 3 retrievers that each return n docs, select n most relevant
+    compressor = FlashrankRerank(top_n=config["ragSearchK"])
+    compression_retriever = ContextualCompressionRetriever(
+        base_compressor=compressor, base_retriever=CustomHybridRetriever()
+    )
+
+    # return CustomHybridRetriever()
+    return compression_retriever
 
 
 def query_rag(query, verbose=False):
@@ -228,13 +268,7 @@ def query_rag(query, verbose=False):
         return
 
     # Basado en https://python.langchain.com/v0.2/docs/how_to/qa_chat_history_how_to/#prompt
-    contextualize_q_system_prompt = (
-        "Dado un historial de chat y la última pregunta del usuario,"
-        "que podría hacer referencia al contexto en el historial de chat,"
-        "formula una pregunta independiente que pueda ser entendida"
-        "sin el historial de chat. NO respondas la pregunta,"
-        "solo reformúlala si es necesario y, si no, devuélvela tal como está."
-    )
+    contextualize_q_system_prompt = "Tu tarea es exclusivamente reformular la siguiente pregunta para que sea entendida sin contexto adicional. Bajo ninguna circunstancia debes proporcionar una respuesta o explicación. Si la pregunta ya es clara y no necesita reformulación, devuélvela tal como está. Solo realiza la reformulación, sin añadir contenido extra."
 
     contextualize_q_prompt = ChatPromptTemplate.from_messages(
         [
